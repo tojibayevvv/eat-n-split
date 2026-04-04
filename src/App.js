@@ -1,3 +1,5 @@
+// import { useState } from "react";
+
 const initialFriends = [
   {
     id: 118836,
@@ -24,7 +26,9 @@ function App() {
     <div className="app">
       <div className="sidebar">
         <FriendsList />
+        <FriendForm />
       </div>
+      <FormSplitBill />
     </div>
   );
 }
@@ -37,8 +41,68 @@ function FriendsList() {
   return (
     <ul>
       {friends.map((friend) => (
-        <li>{friend.name}</li>
+        <Friend friend={friend} key={friend.id} />
       ))}
     </ul>
+  );
+}
+
+function Friend({ friend }) {
+  return (
+    <li>
+      <img src={friend.image} alt={friend.name} />
+      <h3>{friend.name}</h3>
+      {friend.balance < 0 && (
+        <p className="red">
+          You owe {friend.name} {Math.abs(friend.balance)}$
+        </p>
+      )}
+      {friend.balance > 0 && (
+        <p className="green">
+          You owe {friend.name} {Math.abs(friend.balance)}$
+        </p>
+      )}
+      {friend.balance === 0 && <p>You and {friend.name} are even</p>}
+      <Button>Select</Button>
+    </li>
+  );
+}
+
+function Button({ children }) {
+  return <button className="button">{children}</button>;
+}
+
+function FriendForm() {
+  // const [addFriend, setAddFriend] = useState("");
+  return (
+    <>
+      <form className="form-add-friend">
+        <label>Friend name</label>
+        <input type="text" />
+        <label>Image URL</label>
+        <input type="text" />
+        <Button>Add</Button>
+      </form>
+      <Button>Add Friend</Button>
+    </>
+  );
+}
+
+function FormSplitBill() {
+  return (
+    <form className="form-split-bill">
+      <h2>Split the bill with X</h2>
+      <label>Bill Value</label>
+      <input type="text" />
+      <label>Your expense</label>
+      <input type="text" disabled />
+      <label>X's expense</label>
+      <input type="text" />
+      <label>Who's paying?</label>
+      <select>
+        <option value="">You</option>
+      </select>
+      <Button>Split Bill</Button>
+    </form>
   );
 }
