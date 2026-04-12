@@ -41,6 +41,10 @@ function App() {
     setFriendModal(false);
   }
 
+  function handleSplitBill(value) {
+    console.log(value);
+  }
+
   return (
     <div className="app">
       <div className="sidebar">
@@ -54,7 +58,9 @@ function App() {
           {friendModal ? "Close" : "Add Friend"}
         </Button>
       </div>
-      {selected && <FormSplitBill selected={selected} />}
+      {selected && (
+        <FormSplitBill selected={selected} onSplitBill={handleSplitBill} />
+      )}
     </div>
   );
 }
@@ -149,11 +155,19 @@ function FriendForm({ onAddFriend }) {
   );
 }
 
-function FormSplitBill({ selected }) {
+function FormSplitBill({ selected, onSplitBill }) {
   const [bill, setBill] = useState("");
   const [paidByUser, setPaidByUser] = useState("");
   const paidByFriend = bill ? bill - paidByUser : "";
   const [whoIsPaying, setWhoIsPaying] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!bill || !paidByUser) return;
+    onSplitBill(whoIsPaying === "user" ? paidByFriend : -paidByFriend);
+  }
+
   return (
     <form className="form-split-bill">
       <h2>Split the bill with {selected.name}</h2>
